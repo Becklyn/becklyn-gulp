@@ -2,7 +2,7 @@
     "name":        "becklyn-gulp",
     "description": "Small helper for gulp which is used internally at Becklyn",
     "keywords":    ["becklyn", "gulp", "assets"],
-    "version":     "0.0.1",
+    "version":     "0.0.2",
     "author":      "Jannik Zschiesche <jz@becklyn.com>",
     "repository":  {
         "type": "git",
