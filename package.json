@@ -1,24 +1,42 @@
 {
-    "name":        "becklyn-gulp",
+    "name": "becklyn-gulp",
     "description": "Small helper for gulp which is used internally at Becklyn",
-    "keywords":    ["becklyn", "gulp", "assets"],
-    "version":     "0.0.2",
-    "author":      "Jannik Zschiesche <jz@becklyn.com>",
-    "repository":  {
-        "type": "git",
-        "url":  "git://github.com/Becklyn/becklyn-gulp.git"
+    "keywords": [
+        "becklyn",
+        "gulp",
+        "assets"
+    ],
+    "version": "0.1.0",
+    "author": {
+        "name": "Jannik Zschiesche",
+        "email": "jz@becklyn.com"
     },
-    "homepage":    "https://github.com/Becklyn/becklyn-gulp",
-    "bugs":        { "url": "https://github.com/Becklyn/becklyn-gulp/issues" },
-    "main":        "index.js",
-    "license":     "BSD-3-Clause",
-    "devDependencies": {
-        "gulp":           "^3.8.6",
-        "gulp-plumber":   "^0.6.4",
-        "gulp-rename":    "^1.2.0",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/Becklyn/becklyn-gulp.git"
+    },
+    "homepage": "https://github.com/Becklyn/becklyn-gulp",
+    "bugs": {
+        "url": "https://github.com/Becklyn/becklyn-gulp/issues"
+    },
+    "main": "index.js",
+    "license": "BSD-3-Clause",
+    "dependencies": {
+        "gulp": "^3.8.7",
+        "gulp-plumber": "^0.6.4",
+        "gulp-rename": "^1.2.0",
         "gulp-ruby-sass": "^0.7.1",
-        "gulp-uglify":    "^0.3.1",
-        "gulp-watch":     "^0.6.9",
-        "yargs":          "^1.3.1"
+        "gulp-uglify": "^0.3.1",
+        "gulp-watch": "^0.6.9",
+        "gulp-jshint": "^1.8.4",
+        "gulp-util": "^3.0.0",
+        "gulp-if": "^1.2.4",
+        "watchify": "^1.0.1",
+        "browserify": "^5.9.1",
+        "gulp-streamify": "^0.0.5",
+        "glob": "^4.0.5",
+        "fireworm": "^0.6.6",
+        "vinyl-source-stream": "^0.1.1",
+        "wrench": "^1.5.8"
     }
 }
