@@ -21,7 +21,7 @@ module.exports = function (glob, isDebug)
     {
         var pipe = function (files)
         {
-            return files
+            return gulp.src(glob)
                 .pipe(plumber())
                 .pipe(sass({
                     style:     "compressed",
