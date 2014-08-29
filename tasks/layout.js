@@ -20,13 +20,6 @@ module.exports = function (layoutDir, vendorDir, copyMapping)
         return;
     }
 
-    // remove output dir
-    if (fs.existsSync(vendorDir))
-    {
-        wrench.rmdirSyncRecursive(vendorDir);
-    }
-
-
     for (var i = 0; i < copyMapping.length; i++)
     {
         var from = layoutDir + copyMapping[i].from;
@@ -34,8 +27,15 @@ module.exports = function (layoutDir, vendorDir, copyMapping)
 
         wrench.mkdirSyncRecursive(path.dirname( to ));
 
-        wrench.copyDirRecursive(from, to, function (err) {
-            if (err) gutil.log(err);
-        });
+        wrench.copyDirRecursive(
+            from,
+            to,
+            {
+                forceDelete: true
+            },
+            function (err) {
+                if (err) gutil.log(err);
+            }
+        );
     }
 };
