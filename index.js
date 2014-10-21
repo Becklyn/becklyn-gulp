@@ -6,5 +6,6 @@ module.exports = {
     js:         require("./tasks/uglify"),
     layout:     require("./tasks/layout"),
     browserify: require("./tasks/browserify"),
-    jshint:     require("./tasks/jshint")
+    jshint:     require("./tasks/jshint"),
+    publish:    require("./tasks/publish")
 };
