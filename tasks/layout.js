@@ -1,7 +1,7 @@
 var fs     = require("fs");
 var path   = require("path");
 var gutil  = require("gulp-util");
-var wrench = require("wrench")
+var wrench = require("wrench");
 
 
 /**
