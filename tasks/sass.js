@@ -4,6 +4,9 @@ var plumber = require("gulp-plumber");
 var rename = require("gulp-rename");
 var prepareFileName = require("../lib/prepare-file-object");
 var watch = require("gulp-watch");
+var minifyCss = require("gulp-minify-css");
+var libSass = require("gulp-sass");
+var rubySass = require("gulp-ruby-sass");
 var xtend = require("xtend");
 
 /**
@@ -17,7 +20,7 @@ var xtend = require("xtend");
 module.exports = function (glob, isDebug, options)
 {
     var baseDir = getBaseDir(glob);
-    var sassCompiler;
+    var sassCompilerPipe;
 
     options = xtend({
         compiler: "ruby"
@@ -26,14 +29,21 @@ module.exports = function (glob, isDebug, options)
     switch (options.compiler)
     {
         case "libsass":
-            sassCompiler = require("gulp-sass")();
+            sassCompilerPipe = function (gulp) {
+                return gulp
+                    .pipe(libSass())
+                    .pipe(minifyCss());
+            };
             break;
 
         case "ruby":
-            sassCompiler = require("gulp-ruby-sass")({
-                style: "compressed",
-                sourcemap: isDebug ? "auto" : "none"
-            });
+            sassCompilerPipe = function (gulp) {
+                return gulp
+                    .pipe(rubySass({
+                        style: "compressed",
+                        sourcemap: isDebug ? "auto" : "none"
+                    }));
+            };
             break;
     }
 
@@ -41,9 +51,10 @@ module.exports = function (glob, isDebug, options)
     {
         var pipe = function (files)
         {
-            return gulp.src(glob)
-                .pipe(plumber())
-                .pipe(sassCompiler)
+            var innerPipe = gulp.src(glob)
+                .pipe(plumber());
+
+            sassCompilerPipe(innerPipe)
                 .pipe(rename(prepareFileName(baseDir, "assets/scss", "public/css")))
                 .pipe(gulp.dest("./"));
         };
