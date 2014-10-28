@@ -1,21 +1,41 @@
-var gulp            = require("gulp");
-var getBaseDir      = require("../lib/base-dir");
-var plumber         = require("gulp-plumber");
-var sass            = require("gulp-ruby-sass");
-var rename          = require("gulp-rename");
+var gulp = require("gulp");
+var getBaseDir = require("../lib/base-dir");
+var plumber = require("gulp-plumber");
+var rename = require("gulp-rename");
 var prepareFileName = require("../lib/prepare-file-object");
-var watch           = require("gulp-watch");
+var watch = require("gulp-watch");
+var xtend = require("xtend");
 
 /**
  * Compiles SCSS/SASS
  *
- * @param {string} glob         the glob to find the files
- * @param {boolean} isDebug     flag, whether this is the debug mode (will start a watcher)
- * @returns {Function}
+ * @param {string} glob                 the glob to find the files
+ * @param {boolean} isDebug             flag, whether this is the debug mode (will start a watcher)
+ * @param {{compiler: string}} options     options
+ * @returns {function}
  */
-module.exports = function (glob, isDebug)
+module.exports = function (glob, isDebug, options)
 {
     var baseDir = getBaseDir(glob);
+    var sassCompiler;
+
+    options = xtend({
+        compiler: "ruby"
+    }, options);
+
+    switch (options.compiler)
+    {
+        case "libsass":
+            sassCompiler = require("gulp-sass")();
+            break;
+
+        case "ruby":
+            sassCompiler = require("gulp-ruby-sass")({
+                style: "compressed",
+                sourcemap: isDebug ? "auto" : "none"
+            });
+            break;
+    }
 
     return function ()
     {
@@ -23,10 +43,7 @@ module.exports = function (glob, isDebug)
         {
             return gulp.src(glob)
                 .pipe(plumber())
-                .pipe(sass({
-                    style:     "compressed",
-                    sourcemap: isDebug
-                }))
+                .pipe(sassCompiler)
                 .pipe(rename(prepareFileName(baseDir, "assets/scss", "public/css")))
                 .pipe(gulp.dest("./"));
         };
@@ -37,7 +54,7 @@ module.exports = function (glob, isDebug)
         }
         else
         {
-            return pipe( gulp.src(glob) );
+            return pipe(gulp.src(glob));
         }
     };
 };

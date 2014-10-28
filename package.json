@@ -6,7 +6,7 @@
         "gulp",
         "assets"
     ],
-    "version": "0.2.0",
+    "version": "0.2.2",
     "author": {
         "name": "Jannik Zschiesche",
         "email": "jz@becklyn.com"
@@ -26,6 +26,7 @@
         "gulp-plumber": "^0.6.4",
         "gulp-rename": "^1.2.0",
         "gulp-ruby-sass": "^0.7.1",
+        "gulp-sass": "^1.0.0",
         "gulp-uglify": "^0.3.1",
         "gulp-watch": "^0.6.9",
         "gulp-jshint": "^1.8.4",
@@ -37,6 +38,7 @@
         "glob": "^4.0.5",
         "fireworm": "^0.6.6",
         "vinyl-source-stream": "^0.1.1",
-        "wrench": "^1.5.8"
+        "wrench": "^1.5.8",
+        "xtend": "^4.0.0"
     }
 }
