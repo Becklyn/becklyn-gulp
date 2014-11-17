@@ -54,7 +54,7 @@ module.exports = function (glob, isDebug, options)
             var innerPipe = gulp.src(glob)
                 .pipe(plumber());
 
-            sassCompilerPipe(innerPipe)
+            return sassCompilerPipe(innerPipe)
                 .pipe(rename(prepareFileName(baseDir, "assets/scss", "public/css")))
                 .pipe(gulp.dest("./"));
         };
