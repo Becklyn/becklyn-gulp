@@ -1,6 +1,26 @@
 var wrench = require("wrench");
 var fs     = require("fs");
 
+/**
+ * Removes the existing directory
+ */
+function removeExisting ()
+{
+    if (fs.existsSync("web/assets"))
+    {
+        var stat = fs.lstatSync("web/assets");
+
+        if (stat.isFile() || stat.isSymbolicLink())
+        {
+            fs.unlinkSync("web/assets");
+        }
+        else
+        {
+            wrench.rmdirSyncRecursive("web/assets");
+        }
+    }
+}
+
 
 module.exports = {
     /**
@@ -8,28 +28,19 @@ module.exports = {
      */
     symlink: function ()
     {
-        if (fs.existsSync("web/assets"))
-        {
-            var stat = fs.lstatSync("web/assets");
-
-            if (stat.isFile() || stat.isSymbolicLink())
-            {
-                fs.unlinkSync("web/assets");
-            }
-            else
-            {
-                wrench.rmdirSyncRecursive("web/assets");
-            }
-        }
+        removeExisting();
 
         fs.symlinkSync("../public", "web/assets");
     },
+
 
     /**
      * Copies the assets directory
      */
     copy: function ()
     {
+        removeExisting();
+
         wrench.copyDirSyncRecursive("public", "web/assets", {
             forceDelete: true
         });
