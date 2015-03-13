@@ -56,6 +56,10 @@ Option           | Type                     | Default                           
 `useBabel`       | `boolean`                | `true`                                                     | Flag, whether [Babel](https://babeljs.io/) should be used. Also activates `esnext: true` in the jsHint config.
 
 
+**Note:** If you use Babel, you probably need to add the polyfill for older browsers to all your JS entry points.
+Just install the npm-package `babel-core` and do `require("babel-core/lib/babel/polyfill");` at the top of all your top-level JavaScript files.
+
+
 ### Sass (`becklyn.scss(path [, options])`)
 This task compiles Sass (SCSS) files using [libsass](http://libsass.org/).
 It automatically uses [Autoprefixer](https://github.com/postcss/autoprefixer) and in production mode minification with [clean-css](https://github.com/jakubpawlowicz/clean-css).
