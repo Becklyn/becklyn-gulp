@@ -1,5 +1,12 @@
+"use strict";
+
+/**
+ * Task for handling the publishing of assets (either using symlink or copying)
+ */
+
 var wrench = require("wrench");
 var fs     = require("fs");
+
 
 /**
  * Removes the existing directory

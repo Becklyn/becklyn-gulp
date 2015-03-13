@@ -1,71 +1,177 @@
-var gulp = require("gulp");
-var getBaseDir = require("../lib/base-dir");
-var plumber = require("gulp-plumber");
-var rename = require("gulp-rename");
-var prepareFileName = require("../lib/prepare-file-object");
-var watch = require("gulp-watch");
-var minifyCss = require("gulp-minify-css");
-var libSass = require("gulp-sass");
-var rubySass = require("gulp-ruby-sass");
-var xtend = require("xtend");
+"use strict";
+
 
 /**
- * Compiles SCSS/SASS
+ * Task for compiling Sass files
  *
- * @param {string} glob                 the glob to find the files
- * @param {boolean} isDebug             flag, whether this is the debug mode (will start a watcher)
- * @param {{compiler: string}} options     options
- * @returns {function}
+ * @typedef {{
+ *      browsers: Array.<string>,
+ *      lint: boolean
+ * }} SassTaskOptions
  */
-module.exports = function (glob, isDebug, options)
+
+var gulp = require("gulp");
+var plumber = require("gulp-plumber");
+var watch = require("gulp-watch");
+var cssMin = require("gulp-minify-css");
+var sass = require("gulp-sass");
+var xtend = require("xtend");
+var scssLint = require('gulp-scss-lint');
+var autoprefixer = require("gulp-autoprefixer");
+var glob = require("glob");
+var sassHelpers = require("../lib/sass-helpers");
+var path = require("path");
+var gulpUtil = require("gulp-util");
+var pathHelper = require("../lib/path-helper");
+
+
+/**
+ * Compiles a single Sass file
+ *
+ * @param {string} filePath
+ * @param {boolean} isDebug
+ * @param {SassTaskOptions} options
+ * @returns {*}
+ */
+function compileSingleFile (filePath, isDebug, options)
 {
-    var baseDir = getBaseDir(glob);
-    var sassCompilerPipe;
+    gulpUtil.log(gulpUtil.colors.blue("Sass"), pathHelper.makeRelative(filePath));
 
-    options = xtend({
-        compiler: "ruby"
-    }, options);
+    var innerPipe = gulp.src(filePath)
+        .pipe(plumber());
 
-    switch (options.compiler)
+    if (isDebug)
     {
-        case "libsass":
-            sassCompilerPipe = function (gulp) {
-                return gulp
-                    .pipe(libSass())
-                    .pipe(minifyCss());
-            };
-            break;
-
-        case "ruby":
-            sassCompilerPipe = function (gulp) {
-                return gulp
-                    .pipe(rubySass({
-                        style: "compressed",
-                        sourcemap: isDebug ? "auto" : "none"
-                    }));
-            };
-            break;
+        innerPipe = innerPipe
+            .pipe(watch(filePath));
     }
 
-    return function ()
-    {
-        var pipe = function (files)
-        {
-            var innerPipe = gulp.src(glob)
-                .pipe(plumber());
+    innerPipe = innerPipe
+        .pipe(sass({
+            errLogToConsole: true
+        }))
+        .pipe(autoprefixer({
+            browsers: options.browsers,
+            cascade: false
+        }));
 
-            return sassCompilerPipe(innerPipe)
-                .pipe(rename(prepareFileName(baseDir, "assets/scss", "public/css")))
-                .pipe(gulp.dest("./"));
-        };
+    // if not in debug mode, minify
+    if (!isDebug)
+    {
+        innerPipe = innerPipe.pipe(cssMin());
+    }
+
+    var outputPath = "./" + path.dirname(filePath).replace("assets/scss", "public/css");
+
+    // write auto prefixer
+    return innerPipe
+        .pipe(gulp.dest(outputPath));
+}
+
+
+
+/**
+ * Lints the given files
+ *
+ * @param {string} src
+ */
+function lintFiles (src)
+{
+    gulp.src(src)
+        .pipe(scssLint({
+            config: __dirname + "/../config/scss-lint.yml"
+        }));
+}
+
+
+
+/**
+ * Starts a watcher that lints the changed files
+ *
+ * @param {string} src
+ */
+function startWatcherForLinting (src)
+{
+    watch(src,
+        function (file)
+        {
+            if (file.path)
+            {
+                lintFiles(file.path);
+            }
+        }
+    );
+}
+
+
+
+/**
+ * Compiles all files in the given selector
+ *
+ * @param {string} src all what is accepted by glob
+ * @param {bool} isDebug
+ * @param {SassTaskOptions} options
+ */
+function compileAllFiles (src, isDebug, options)
+{
+    glob(src,
+        function (err, files)
+        {
+            if (err) throw err;
+
+            for (var i = 0, l = files.length; i < l; i++)
+            {
+                // only start compilation at root files
+                if (sassHelpers.isRootFile(files[i]))
+                {
+                    compileSingleFile(files[i], isDebug, options);
+                }
+            }
+        }
+    );
+}
+
+
+
+/**
+ * Compiles SCSS
+ *
+ * @param {string} src               the glob to find the files
+ * @param {SassTaskOptions} options  options
+ * @returns {function(isDebug: bool)}
+ */
+module.exports = function (src, options)
+{
+    options = xtend({
+        browsers: ["last 2 versions", "ie 9"],
+        lint: true
+    }, options);
+
+    return function (isDebug)
+    {
+        if (options.lint)
+        {
+            // initially lint all files
+            lintFiles(src);
+        }
 
         if (isDebug)
         {
-            return watch({glob: glob}, pipe);
+            if (options.lint)
+            {
+                // start lint watcher
+                startWatcherForLinting(src);
+            }
+
+            watch(src,
+                function () {
+                    compileAllFiles(src, isDebug, options);
+                }
+            );
         }
         else
         {
-            return pipe(gulp.src(glob));
+            compileAllFiles(src, isDebug, options);
         }
     };
 };

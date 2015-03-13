@@ -1,3 +1,9 @@
+"use strict";
+
+/**
+ * Task for copying layout files
+ */
+
 var fs     = require("fs");
 var path   = require("path");
 var gutil  = require("gulp-util");

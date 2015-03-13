@@ -1,33 +1,70 @@
-var gulp    = require("gulp");
-var plumber = require("gulp-plumber");
-var jshint  = require("gulp-jshint");
+"use strict";
+
+/**
+ * Task for linting javascript files
+ *
+ * @typedef {{
+ *      rules: {
+ *          esnext: boolean
+ *      }
+ * }} JsHintTaskOptions
+ */
+
+var jsHintHelper = require("../lib/jshint-helper");
+var glob         = require("glob");
+var watch        = require("gulp-watch");
+var xtend        = require("xtend");
+
+
+/**
+ * Lints all files in a given glob
+ *
+ * @param {string} src
+ * @param {JsHintTaskOptions} options
+ */
+function lintAllFiles (src, options)
+{
+    glob(src,
+        function (err, files)
+        {
+            if (err) throw err;
+
+            for (var i = 0, l = files.length; i < l; i++)
+            {
+                jsHintHelper.lintFile(files[i], options.rules);
+            }
+        }
+    );
+}
 
 
 /**
  * Runs JSHint
  *
- * @param {string} glob         the glob to find the files
- * @param {boolean} isDebug     flag, whether this is the debug mode (will start a watcher)
- * @returns {Function}
+ * @param {string} src the glob to find the files
+ * @param {JsHintTaskOptions} options
+ * @returns {function(isDebug: bool)}
  */
-module.exports = function (glob, isDebug)
+module.exports = function (src, options)
 {
-    var pipe = function (pipe)
-    {
-        return pipe
-            .pipe(plumber())
-            .pipe(jshint({
-                lookup: true
-            }))
-            .pipe(jshint.reporter('jshint-stylish'));
-    };
+    options = xtend({
+        rules: {}
+    }, options);
 
-    if (isDebug)
+    return function (isDebug)
     {
-        return watch({glob: glob}, pipe);
-    }
-    else
-    {
-        return pipe( gulp.src(glob) );
-    }
+        lintAllFiles(src, options);
+
+        if (isDebug)
+        {
+            watch(src,
+                function (file) {
+                    if (file.path)
+                    {
+                        jsHintHelper.lintFile(file.path, options.rules);
+                    }
+                }
+            );
+        }
+    };
 };
