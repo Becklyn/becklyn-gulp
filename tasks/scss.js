@@ -35,7 +35,8 @@ var pathHelper = require("../lib/path-helper");
  */
 function compileSingleFile (filePath, isDebug, options)
 {
-    gulpUtil.log(gulpUtil.colors.blue("Sass"), pathHelper.makeRelative(filePath));
+    var outputPath = "./" + path.dirname(filePath).replace("assets/scss", "public/css");
+    gulpUtil.log(gulpUtil.colors.blue("Sass"), pathHelper.makeRelative(filePath), " -> ", path.join(outputPath, path.basename(filePath)));
 
     var innerPipe = gulp.src(filePath)
         .pipe(plumber());
@@ -60,8 +61,6 @@ function compileSingleFile (filePath, isDebug, options)
     {
         innerPipe = innerPipe.pipe(cssMin());
     }
-
-    var outputPath = "./" + path.dirname(filePath).replace("assets/scss", "public/css");
 
     // write auto prefixer
     return innerPipe

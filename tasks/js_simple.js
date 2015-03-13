@@ -30,15 +30,15 @@ var pathHelper = require("../lib/path-helper");
  */
 function compileSingleFile (filePath, isDebug, options)
 {
-    gulpUtil.log(gulpUtil.colors.blue("Uglify"), pathHelper.makeRelative(filePath));
+    var outputPath = "./" + path.dirname(filePath).replace("/assets/js", "/public/js");
+    var uglifyOptions = {};
+
+    gulpUtil.log(gulpUtil.colors.blue("Uglify"), pathHelper.makeRelative(filePath), " -> ", pathHelper.makeRelative(outputPath) + "/" + path.basename(filePath));
 
     if (options.lint)
     {
         jsHintHelper.lintFile(filePath);
     }
-
-    var outputPath = "./" + path.dirname(filePath).replace("/assets/js", "/public/js");
-    var uglifyOptions = {};
 
     if (isDebug)
     {

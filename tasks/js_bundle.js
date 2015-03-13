@@ -130,7 +130,7 @@ function compileSingleFile (filePath, isDebug, options)
         {
             if (err) throw new gulpUtil.PluginError("webpack", err);
 
-            gulpUtil.log(gulpUtil.colors.blue("webpack"), pathHelper.makeRelative(filePath));
+            gulpUtil.log(gulpUtil.colors.blue("webpack"), pathHelper.makeRelative(filePath), " -> ", pathHelper.makeRelative(outputPath) + "/" + path.basename(filePath));
             gulpUtil.log(stats.toString({
                 colors: true,
                 version: false,
