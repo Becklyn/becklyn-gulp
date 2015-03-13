@@ -97,14 +97,15 @@ function compileSingleFile (filePath, isDebug, options)
 
     if (options.lint)
     {
-        webpackConfig.module.postLoaders = [{
+        webpackConfig.module.preLoaders = [{
             test: /\.js$/,
             exclude: /node_modules/,
             loader: "jshint"
         }];
 
         webpackConfig.jshint = jsHintConfigHelper.getRules({
-            reporter: logJsHintWarning
+            reporter: logJsHintWarning,
+            esnext: true
         });
     }
 
