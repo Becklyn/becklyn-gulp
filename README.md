@@ -51,7 +51,7 @@ It automatically minifies file in non-debug mode, using [UglifyJS](http://lisper
 Option           | Type                     | Default                                                    | Description
 ---------------- | ------------------------ | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------
 `externals`      | `Array.<string, string>` | `["jquery": "window.jQuery", "routing": "window.Routing"]` | The libraries that are shimmed by webpack.
-`lint`           | `boolean`                | `true`                                                     | Flag, whether the source should be linted (using jsHint).
+`lint`           | `boolean`                | `= isDebug`                                                | Flag, whether the source should be linted (using jsHint).
 `logCachedFiles` | `boolean`                | `false`                                                    | Flag, whether the task should report on files that haven't changed.
 `useBabel`       | `boolean`                | `true`                                                     | Flag, whether [Babel](https://babeljs.io/) should be used. Also activates `esnext: true` in the jsHint config.
 
@@ -67,15 +67,15 @@ It automatically uses [Autoprefixer](https://github.com/postcss/autoprefixer) an
 Option     | Type             | Default                       | Description
 ---------- | ---------------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------
 `browsers` | `Array.<string>` | `["last 2 versions", "ie 9"]` | The supported browser, for which prefixes should be generated (by Autoprefixer)
-`lint`     | `boolean`        | `true`                        | Flag, whether the source should be linted (using [scss-lint](https://github.com/causes/scss-lint)).
+`lint`     | `boolean`        | `= isDebug`                   | Flag, whether the source should be linted (using [scss-lint](https://github.com/causes/scss-lint)).
 
 
 ### Uglify (`becklyn.js_simple(path [, options])`)
 This task compiles JavaScript files using UglifyJS. It does not include bundling using a system like webpack.
 
-Option | Type      | Default | Description
------- | --------- | ------- | ---------------------------------------------------------
-`lint` | `boolean` | `true`  | Flag, whether the source should be linted (using jsHint).
+Option | Type      | Default      | Description
+------ | --------- | ------------ | ---------------------------------------------------------
+`lint` | `boolean` | `= isDebug`  | Flag, whether the source should be linted (using jsHint).
 
 
 ### jsHint (`becklyn.jshint(path [, options])`)

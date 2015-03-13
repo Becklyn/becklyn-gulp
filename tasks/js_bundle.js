@@ -178,18 +178,18 @@ module.exports = function (src, options)
         src = "./" + src;
     }
 
-    options = xtend({
-        externals: {
-            "jquery": "window.jQuery",
-            "routing": "window.Routing"
-        },
-        lint: true,
-        logCachedFiles: false,
-        useBabel: true
-    }, options);
-
     return function (isDebug)
     {
+        options = xtend({
+            externals: {
+                "jquery": "window.jQuery",
+                "routing": "window.Routing"
+            },
+            lint: isDebug,
+            logCachedFiles: false,
+            useBabel: true
+        }, options);
+
         compileAllFiles(src, isDebug, options);
     };
 };

@@ -141,13 +141,14 @@ function compileAllFiles (src, isDebug, options)
  */
 module.exports = function (src, options)
 {
-    options = xtend({
-        browsers: ["last 2 versions", "ie 9"],
-        lint: true
-    }, options);
-
     return function (isDebug)
     {
+        options = xtend({
+            browsers: ["last 2 versions", "ie 9"],
+            lint: isDebug
+        }, options);
+
+
         if (options.lint)
         {
             // initially lint all files

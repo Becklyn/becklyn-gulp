@@ -87,12 +87,12 @@ function compileAllFiles (src, isDebug, options)
  */
 module.exports = function (src, options)
 {
-    options = xtend({
-        lint: true
-    }, options);
-
     return function (isDebug)
     {
+        options = xtend({
+            lint: isDebug
+        }, options);
+
         compileAllFiles(src, isDebug, options);
 
         if (isDebug)
