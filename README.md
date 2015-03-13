@@ -48,13 +48,13 @@ gulp.task("dev", function () { jsTask(true); });
 This task compiles javascript files using [webpack](http://webpack.github.io/).
 It automatically minifies file in non-debug mode, using [UglifyJS](http://lisperator.net/uglifyjs/).
 
-Option           | Type                     | Default                                                    | Description
----------------- | ------------------------ | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------
-`externals`      | `Array.<string, string>` | `["jquery": "window.jQuery", "routing": "window.Routing"]` | The libraries that are shimmed by webpack.
-`lint`           | `boolean`                | `= isDebug`                                                | Flag, whether the source should be linted (using jsHint).
-`logCachedFiles` | `boolean`                | `false`                                                    | Flag, whether the task should report on files that haven't changed.
-`useBabel`       | `boolean`                | `true`                                                     | Flag, whether [Babel](https://babeljs.io/) should be used. Also activates `esnext: true` in the jsHint config.
-
+Option           | Type                                     | Default                                                    | Description
+---------------- | ---------------------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------
+`externals`      | `Array.<string, string>`                 | `["jquery": "window.jQuery", "routing": "window.Routing"]` | The libraries that are shimmed by webpack.
+`lint`           | `boolean`                                | `= isDebug`                                                | Flag, whether the source should be linted (using jsHint).
+`logCachedFiles` | `boolean`                                | `false`                                                    | Flag, whether the task should report on files that haven't changed.
+`useBabel`       | `boolean`                                | `true`                                                     | Flag, whether [Babel](https://babeljs.io/) should be used. Also activates `esnext: true` in the jsHint config.
+`moduleLoaders`  | `Array.<{test: RegExp, loader: string}>` | `[]`                                                       | Additional loaders, as described in [the docs][webpack-loader-docs]. (The babel and jsHint loader will still be automatically added, depending on the `useBabel` and `lint` options.)
 
 **Note:** If you use Babel, you probably need to add the polyfill for older browsers to all your JS entry points.
 Just install the npm-package `babel-core` and do `require("babel-core/lib/babel/polyfill");` at the top of all your top-level JavaScript files.
@@ -147,3 +147,6 @@ The idea is that the directory structure looks like this:
 *   `becklyn.publish.copy()` will recursively copy the content of `../public` to `./web/assets`.
 
 **Warning:** Both commands will wipe the current files / directories at `./web/assets`.
+
+
+[webpack-loader-docs]: http://webpack.github.io/docs/using-loaders.html#configuration

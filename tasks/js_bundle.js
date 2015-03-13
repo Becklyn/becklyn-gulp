@@ -7,7 +7,8 @@
  *      externals: Array.<string, string>,
  *      lint: boolean,
  *      logCachedFiles: boolean,
- *      useBabel: true
+ *      useBabel: true,
+ *      moduleLoaders: Array
  * }} JsBundleTaskOptions
  */
 
@@ -76,7 +77,9 @@ function compileSingleFile (filePath, isDebug, options)
             filename: path.basename(filePath)
         },
         externals: options.externals,
-        module: {},
+        module: {
+            loaders: options.moduleLoaders
+        },
         watch: isDebug,
         debug: isDebug,
         plugins: [
@@ -89,11 +92,11 @@ function compileSingleFile (filePath, isDebug, options)
 
     if (options.useBabel)
     {
-        webpackConfig.module.loaders = [{
+        webpackConfig.module.loaders.push({
             test: /\.js$/,
             exclude: /node_modules/,
             loader: "babel"
-        }];
+        });
     }
 
     if (options.lint)
@@ -187,10 +190,10 @@ module.exports = function (src, options)
             },
             lint: isDebug,
             logCachedFiles: false,
-            useBabel: true
+            useBabel: true,
+            moduleLoaders: []
         }, options);
 
         compileAllFiles(src, isDebug, options);
     };
 };
-
