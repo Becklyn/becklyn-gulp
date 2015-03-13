@@ -155,6 +155,8 @@ module.exports = function (src, options)
             lintFiles(src);
         }
 
+        compileAllFiles(src, isDebug, options);
+
         if (isDebug)
         {
             if (options.lint)
@@ -168,10 +170,6 @@ module.exports = function (src, options)
                     compileAllFiles(src, isDebug, options);
                 }
             );
-        }
-        else
-        {
-            compileAllFiles(src, isDebug, options);
         }
     };
 };
