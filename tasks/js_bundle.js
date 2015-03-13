@@ -82,9 +82,8 @@ function compileSingleFile (filePath, isDebug, options)
         plugins: [
             new webpack.optimize.OccurenceOrderPlugin(true)
         ],
-        resolve: {
-            modulesDirectory: [__dirname + "/../node_modules"],
-            root: __dirname + "/../node_modules"
+        resolveLoader: {
+            root: path.join(path.dirname(__dirname), "node_modules")
         }
     };
 
@@ -93,7 +92,7 @@ function compileSingleFile (filePath, isDebug, options)
         webpackConfig.module.loaders = [{
             test: /\.js$/,
             exclude: /node_modules/,
-            loader: 'babel'
+            loader: "babel"
         }];
     }
 
