@@ -48,7 +48,6 @@ module.exports = {
 
         // environments
         browser: true,
-        browserify: true,
-        jquery: true
+        browserify: true
     }
 };
