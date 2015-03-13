@@ -36,7 +36,7 @@ var pathHelper = require("../lib/path-helper");
 function compileSingleFile (filePath, isDebug, options)
 {
     var outputPath = "./" + path.dirname(filePath).replace("assets/scss", "public/css");
-    gulpUtil.log(gulpUtil.colors.blue("Sass"), pathHelper.makeRelative(filePath), " -> ", path.join(outputPath, path.basename(filePath)));
+    gulpUtil.log(gulpUtil.colors.blue("Sass"), pathHelper.makeRelative(filePath), " -> ", outputPath + "/" + path.basename(filePath).replace(/\.scss$/, ".css"));
 
     var innerPipe = gulp.src(filePath)
         .pipe(plumber());
