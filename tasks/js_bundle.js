@@ -6,7 +6,8 @@
  * @typedef {{
  *      externals: Array.<string, string>,
  *      lint: boolean,
- *      logCachedFiles: boolean
+ *      logCachedFiles: boolean,
+ *      useBabel: true
  * }} JsBundleTaskOptions
  */
 
@@ -75,15 +76,7 @@ function compileSingleFile (filePath, isDebug, options)
             filename: path.basename(filePath)
         },
         externals: options.externals,
-        module: {
-            loaders: [
-                {
-                    test: /\.js$/,
-                    exclude: /node_modules/,
-                    loader: 'babel'
-                }
-            ]
-        },
+        module: {},
         watch: isDebug,
         debug: isDebug,
         plugins: [
@@ -95,6 +88,15 @@ function compileSingleFile (filePath, isDebug, options)
         }
     };
 
+    if (options.useBabel)
+    {
+        webpackConfig.module.loaders = [{
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: 'babel'
+        }];
+    }
+
     if (options.lint)
     {
         webpackConfig.module.preLoaders = [{
@@ -105,7 +107,7 @@ function compileSingleFile (filePath, isDebug, options)
 
         webpackConfig.jshint = jsHintConfigHelper.getRules({
             reporter: logJsHintWarning,
-            esnext: true
+            esnext: options.useBabel
         });
     }
 
@@ -180,11 +182,11 @@ module.exports = function (src, options)
     options = xtend({
         externals: {
             "jquery": "window.jQuery",
-            "routing": "window.Routing",
-            "google": "window.google"
+            "routing": "window.Routing"
         },
         lint: true,
-        logCachedFiles: false
+        logCachedFiles: false,
+        useBabel: true
     }, options);
 
     return function (isDebug)
