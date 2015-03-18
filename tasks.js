@@ -7,5 +7,8 @@ module.exports = {
     scss:      require("./tasks/scss"),
     jshint:    require("./tasks/jshint"),
     layout:    require("./tasks/layout"),
-    publish:   require("./tasks/publish")
+    publish:   require("./tasks/publish"),
+
+    // pass our gulp version out
+    gulp: require("gulp")
 };
