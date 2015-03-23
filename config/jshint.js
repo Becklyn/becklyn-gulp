@@ -38,7 +38,24 @@ module.exports = {
         nocomma: true,
         nonbsp: true,
         nonew: true,
-        singleGroups: true,
+
+        // Disable, as this may reduce readability.
+        //
+        // Examples:
+        //    var change = bgChange >= 0 ? absoluteChange : `-${absoluteChange}`;
+        //    vs
+        //    var change = (bgChange >= 0) ? absoluteChange : `-${absoluteChange}`;
+        //
+        //    and
+        //
+        //    if (transitions.hasOwnProperty(t) && el.style[t] !== undefined)
+        //    vs
+        //    if (transitions.hasOwnProperty(t) && (el.style[t] !== undefined))
+        //
+        // One might argue, that the second examples improve readability, although they use technically
+        // unnecessary grouping.
+        singleGroups: false,
+
         undef: true,
         unused: true,
 
