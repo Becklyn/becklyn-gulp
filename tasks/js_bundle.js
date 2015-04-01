@@ -98,7 +98,7 @@ function compileSingleFile (filePath, isDebug, options)
     {
         webpackConfig.module.loaders.push({
             test: /\.js$/,
-            exclude: /node_modules/,
+            exclude: /\/node_modules\//,
             loader: "babel"
         });
     }
@@ -107,7 +107,7 @@ function compileSingleFile (filePath, isDebug, options)
     {
         webpackConfig.module.preLoaders = [{
             test: /\.js$/,
-            exclude: /node_modules/,
+            exclude: /\/(node_modules|vendor)\//,
             loader: "jshint"
         }];
 
