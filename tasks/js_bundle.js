@@ -51,10 +51,14 @@ function logJsHintWarning (errors)
             " (" + error.code + ")"
         );
 
-        gulpUtil.log(
-            "        " +
-            gulpUtil.colors.gray(error.evidence.replace(/^\s*|\s*$/, ""))
-        );
+        if (typeof error.evidence === "string")
+        {
+            gulpUtil.log(
+                "        " +
+                gulpUtil.colors.gray(error.evidence.replace(/^\s*|\s*$/, ""))
+            );
+        }
+
         gulpUtil.log("");
     }
 }
