@@ -132,10 +132,7 @@ function lintFiles (src)
             config: __dirname + "/../config/scss-lint.yml",
             customReport: issueCountReporter
         }))
-        .on('end', function ()
-        {
-            reportTotalIssueCount();
-        });
+        .on('end', reportTotalIssueCount);
 }
 
 
