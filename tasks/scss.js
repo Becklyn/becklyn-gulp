@@ -132,6 +132,10 @@ function lintFiles (src)
             config: __dirname + "/../config/scss-lint.yml",
             customReport: issueCountReporter
         }))
+        .on('error', function (error)
+        {
+            gulpUtil.log(gulpUtil.colors.red('An error has occurred while executing scss-lint: ' + error.message));
+        })
         .on('end', reportTotalIssueCount);
 }
 
