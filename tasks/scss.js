@@ -17,12 +17,63 @@ var cssMin = require("gulp-minify-css");
 var sass = require("gulp-sass");
 var xtend = require("xtend");
 var scssLint = require('gulp-scss-lint');
+var scssLintReporter = require('gulp-scss-lint/src/reporters.js');
 var autoprefixer = require("gulp-autoprefixer");
 var glob = require("glob");
 var sassHelpers = require("../lib/sass-helpers");
 var path = require("path");
 var gulpUtil = require("gulp-util");
 var pathHelper = require("../lib/path-helper");
+
+var totalIssues = 0;
+
+
+/**
+ * Wraps the default SCSS Lint Reporter and
+ * counts the total amount of issues
+ *
+ * @param {{
+ *      scsslint: {
+ *          success: bool,
+ *          errors: int,
+ *          warnings: int,
+ *          issues: Array.<{
+ *              line: int,
+ *              column: int,
+ *              severity: string,
+ *              reason: string,
+ *          }>
+ *      }}} file
+ */
+function issueCountReporter (file)
+{
+    if (!file.scsslint.success)
+    {
+        totalIssues += file.scsslint.issues.length;
+    }
+
+    scssLintReporter.defaultReporter(file);
+}
+
+
+/**
+ * Prints the total issue count to the stdout
+ *
+ * @returns {*}
+ */
+function reportTotalIssueCount ()
+{
+    var outputColor = gulpUtil.colors.green;
+    if (totalIssues > 0)
+    {
+        outputColor = gulpUtil.colors.red;
+    }
+
+    gulpUtil.log(gulpUtil.colors.yellow('»»'), 'Total CSS issues:', outputColor(totalIssues));
+
+    // Reset the issue count so we don't increment it every time a file has been modified while it is being watched
+    totalIssues = 0;
+}
 
 
 /**
@@ -78,10 +129,15 @@ function lintFiles (src)
 {
     gulp.src(src)
         .pipe(scssLint({
-            config: __dirname + "/../config/scss-lint.yml"
-        }));
+            config: __dirname + "/../config/scss-lint.yml",
+            customReport: issueCountReporter
+        }))
+        .on('error', function (error)
+        {
+            gulpUtil.log(gulpUtil.colors.red('An error has occurred while executing scss-lint: ' + error.message));
+        })
+        .on('end', reportTotalIssueCount);
 }
-
 
 
 /**

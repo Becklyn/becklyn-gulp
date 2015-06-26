@@ -20,6 +20,8 @@ var xtend = require("xtend");
 var pathHelper = require("../lib/path-helper");
 var jsHintConfigHelper = require("../config/jshint");
 
+var totalIssues = 0;
+
 
 /**
  * Logs jsHint warnings to the console
@@ -36,6 +38,8 @@ var jsHintConfigHelper = require("../config/jshint");
  */
 function logJsHintWarning (errors)
 {
+    totalIssues += errors.length;
+
     var sourceFile = pathHelper.makeRelative(this.resourcePath);
     gulpUtil.log(gulpUtil.colors.yellow("jshint warning") + " in " + sourceFile);
 
@@ -61,6 +65,24 @@ function logJsHintWarning (errors)
 
         gulpUtil.log("");
     }
+}
+
+
+/**
+ * Reports the total amount of JavaScript issues detected by JsHint
+ */
+function reportTotalIssueCount ()
+{
+    var outputColor = gulpUtil.colors.green;
+    if (totalIssues > 0)
+    {
+        outputColor = gulpUtil.colors.red;
+    }
+
+    gulpUtil.log(gulpUtil.colors.yellow('»»'), 'Total JS issues:', outputColor(totalIssues));
+
+    // Reset the issue count so we don't increment it every time a file has been modified while it is being watched
+    totalIssues = 0;
 }
 
 
@@ -144,6 +166,11 @@ function compileSingleFile (filePath, isDebug, options)
                 hash: false,
                 cached: options.logCachedFiles
             }));
+
+            if (isDebug)
+            {
+                reportTotalIssueCount();
+            }
         }
     );
 }
