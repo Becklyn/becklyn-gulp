@@ -30,7 +30,7 @@ var pathHelper = require("../lib/path-helper");
  */
 function compileSingleFile (filePath, isDebug, options)
 {
-    var outputPath = "./" + path.dirname(filePath).replace("/assets/js", "/public/js");
+    var outputPath = "./" + path.dirname(filePath).replace(/(^|\/)assets\/js/, "$1public/js");
     var uglifyOptions = {};
 
     gulpUtil.log(gulpUtil.colors.blue("Uglify"), pathHelper.makeRelative(filePath), " -> ", pathHelper.makeRelative(outputPath) + "/" + path.basename(filePath));
