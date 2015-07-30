@@ -106,10 +106,16 @@ function compileSingleFile (filePath, isDebug, options)
         module: {
             loaders: options.moduleLoaders
         },
+        resolve: {
+            root: [path.join(process.env.PWD, "bower_components")]
+        },
         watch: isDebug,
         debug: isDebug,
         plugins: [
-            new webpack.optimize.OccurenceOrderPlugin(true)
+            new webpack.optimize.OccurenceOrderPlugin(true),
+            new webpack.ResolverPlugin(
+                new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
+            )
         ],
         resolveLoader: {
             root: path.join(path.dirname(__dirname), "node_modules")
@@ -120,7 +126,7 @@ function compileSingleFile (filePath, isDebug, options)
     {
         webpackConfig.module.loaders.push({
             test: /\.js$/,
-            exclude: /\/node_modules\//,
+            exclude: /\/node_modules|bower_components\//,
             loader: "babel"
         });
     }
@@ -129,7 +135,7 @@ function compileSingleFile (filePath, isDebug, options)
     {
         webpackConfig.module.preLoaders = [{
             test: /\.js$/,
-            exclude: /\/(node_modules|vendor)\//,
+            exclude: /\/(node_modules|vendor|bower_components)\//,
             loader: "jshint"
         }];
 
