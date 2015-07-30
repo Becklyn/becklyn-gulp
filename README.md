@@ -149,4 +149,18 @@ The idea is that the directory structure looks like this:
 **Warning:** Both commands will wipe the current files / directories at `./web/assets`.
 
 
+## Bower / SCSS include paths
+
+You can use bower with `becklyn-gulp`. If you run the gulp task, the current working directory (= the directory where your `gulpfile.js` is) 
+is automatically added to the include paths of `node-sass`.
+
+So in your CSS you can just do
+
+```scss
+@import "bower_components/normalize.css/normalize";
+```
+
+and it should work.
+
+
 [webpack-loader-docs]: http://webpack.github.io/docs/using-loaders.html#configuration
