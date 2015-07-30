@@ -100,7 +100,10 @@ function compileSingleFile (filePath, isDebug, options)
 
     innerPipe = innerPipe
         .pipe(sass({
-            errLogToConsole: true
+            errLogToConsole: true,
+            includePaths: [
+                process.env.PWD
+            ]
         }))
         .pipe(autoprefixer({
             browsers: options.browsers,
