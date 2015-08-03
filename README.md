@@ -56,8 +56,9 @@ Option           | Type                                     | Default           
 `useBabel`       | `boolean`                                | `true`                                                     | Flag, whether [Babel](https://babeljs.io/) should be used. Also activates `esnext: true` in the jsHint config.
 `moduleLoaders`  | `Array.<{test: RegExp, loader: string}>` | `[]`                                                       | Additional loaders, as described in [the docs][webpack-loader-docs]. (The babel and jsHint loader will still be automatically added, depending on the `useBabel` and `lint` options.)
 
-**Note:** If you use Babel, you probably need to add the polyfill for older browsers to all your JS entry points.
-Just install the npm-package `babel-core` and do `require("babel-core/lib/babel/polyfill");` at the top of all your top-level JavaScript files.
+**Note:** If you use Babel, you probably need to add the polyfill for older browsers to all your JS entry points. Just use the ECMAScript 6 polyfill from [`babel-es6-polyfill`] and insert `require("babel-es6-polyfill/polyfill.js");` to include all required functionality.
+
+> Alternatively you can use the polyfill directly from [`babel-core`] and do `require("babel-core/lib/babel/polyfill");` at the top of all your top-level JavaScript files. But then you will add probably unwanted ES5 polyfills (if you only support modern browser) and polyfills for ES7, which might be still in discussion and therefore unstable.
 
 
 ### Sass (`becklyn.scss(path [, options])`)
@@ -164,3 +165,5 @@ and it should work.
 
 
 [webpack-loader-docs]: http://webpack.github.io/docs/using-loaders.html#configuration
+[babel-es6-polyfill]: https://www.npmjs.com/package/babel-es6-polyfill
+[babel-core]: https://www.npmjs.com/package/babel-core
