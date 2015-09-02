@@ -113,7 +113,9 @@ function compileSingleFile (filePath, isDebug, options)
     // if not in debug mode, minify
     if (!isDebug)
     {
-        innerPipe = innerPipe.pipe(cssMin());
+        innerPipe = innerPipe.pipe(cssMin({
+            processImport: false
+        }));
     }
 
     // write auto prefixer
