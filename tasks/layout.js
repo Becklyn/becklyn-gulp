@@ -15,10 +15,12 @@ var wrench = require("wrench");
  *
  * @param {string} layoutDir                                    the path where the layout files are located
  * @param {string} vendorDir                                    the path where the layout files should be copied to
- * @param {Array.<{from: string, to: string}>} copyMapping      the relative paths to copy from/to
+ * @param {?Array.<{from: string, to: string}>} copyMapping      the relative paths to copy from/to
  */
 module.exports = function (layoutDir, vendorDir, copyMapping)
 {
+    copyMapping = copyMapping || [{from: "", to: ""}];
+
     // check that input dir exists
     if (!fs.existsSync(layoutDir))
     {
@@ -33,15 +35,19 @@ module.exports = function (layoutDir, vendorDir, copyMapping)
 
         wrench.mkdirSyncRecursive(path.dirname( to ));
 
-        wrench.copyDirRecursive(
-            from,
-            to,
-            {
-                forceDelete: true
-            },
-            function (err) {
-                if (err) gutil.log(err);
-            }
-        );
+        try
+        {
+            wrench.copyDirSyncRecursive(
+                from,
+                to,
+                {
+                    forceDelete: true
+                }
+            );
+        }
+        catch (err)
+        {
+            gutil.log(err);
+        }
     }
 };
