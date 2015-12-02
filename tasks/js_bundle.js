@@ -111,12 +111,7 @@ function compileSingleFile (filePath, isDebug, options)
         },
         watch: isDebug,
         debug: isDebug,
-        plugins: [
-            new webpack.optimize.OccurenceOrderPlugin(true),
-            new webpack.ResolverPlugin(
-                new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
-            )
-        ],
+        plugins: options.plugins.slice(), // use copy of original plugins array to not modify it
         resolveLoader: {
             root: path.join(path.dirname(__dirname), "node_modules")
         }
@@ -228,8 +223,18 @@ module.exports = function (src, options)
             lint: isDebug,
             logCachedFiles: false,
             useBabel: true,
-            moduleLoaders: []
+            moduleLoaders: [],
+            plugins: []
         }, options);
+
+        options.plugins.push(
+            new webpack.optimize.OccurenceOrderPlugin(true)
+        );
+        options.plugins.push(
+            new webpack.ResolverPlugin(
+                new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin("bower.json", ["main"])
+            )
+        );
 
         compileAllFiles(src, isDebug, options);
     };
