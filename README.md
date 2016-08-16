@@ -1,6 +1,15 @@
 becklyn-gulp
 ============
 
+```
+==========
+DEPRECATED
+==========
+
+This project is deprecated. Please use kaba (https://github.com/Becklyn/kaba) instead.
+```
+
+
 Small helper for gulp which is used internally at [Becklyn](http://www.becklyn.com).
 It includes some style guide definitions in form of default jsHint and scss-lint rules.
 
